@@ -17,7 +17,6 @@ import {
   filterAndSortResults,
 } from '../utils/game.js';
 import { remove, render } from '../utils/render.js';
-import { compareObj } from '../utils/common.js';
 
 class GamePresenter {
   #gameContainer = null;
@@ -44,13 +43,7 @@ class GamePresenter {
 
   #popupPresenter = null;
 
-  constructor(
-    gameContainer,
-    boardSizeModel,
-    movesCounterModel,
-    timerModel,
-    soundModel
-  ) {
+  constructor(gameContainer, boardSizeModel, movesCounterModel, timerModel, soundModel) {
     this.#gameContainer = gameContainer;
     this.#boardSizeModel = boardSizeModel;
     this.#movesCounterModel = movesCounterModel;
@@ -101,7 +94,7 @@ class GamePresenter {
       this.#newGame,
       this.#saveGame,
       this.#loadGame,
-      this.#showResults
+      this.#showResults,
     );
     this.#headerPresenter.init();
   };
@@ -161,9 +154,7 @@ class GamePresenter {
 
     if (!canIMoveTile(tilePosition, emptyCellPosition)) return;
 
-    const tileComponent = this.#tiles.find(
-      (tile) => tile.number === tileData.number
-    );
+    const tileComponent = this.#tiles.find((tile) => tile.number === tileData.number);
     tileComponent.changePosition(emptyCellPosition);
     swapTile(tilePosition, emptyCellPosition, this.#gameState);
     this.#moves++;
@@ -173,35 +164,18 @@ class GamePresenter {
     if (this.#isWin()) {
       this.#timerModel.stopTimer();
       this.#isGameEnd = true;
-      this.#soundModel.isSoundEnabled &&
-        this.#soundComponent.playVictorySound();
+      this.#soundModel.isSoundEnabled && this.#soundComponent.playVictorySound();
       this.#popupPresenter.showWinMessage(this.#moves, this.#timerModel.time);
-      saveResults(
-        this.#boardSizeModel.size,
-        this.#timerModel.time,
-        this.#moves
-      );
+      saveResults(this.#boardSizeModel.size, this.#timerModel.time, this.#moves);
     }
   };
 
-  #isWin = () => {
-    for (let i = 0; i < this.#boardSizeModel.size ** 2; i++) {
-      const winPos = this.#winCombination.find((it) => it.number === i);
-      const checkPos = this.#gameState.find((it) => it.number === i);
-      if (!compareObj(winPos, checkPos)) return false;
-    }
-    return true;
-  };
+  #isWin = () => JSON.stringify(this.#gameState) === JSON.stringify(this.#winCombination);
 
   #saveGame = () => {
     if (this.#isGameEnd) return;
 
-    saveDataGame(
-      this.#gameState,
-      this.#boardSizeModel.size,
-      this.#timerModel.time,
-      this.#moves
-    );
+    saveDataGame(this.#gameState, this.#boardSizeModel.size, this.#timerModel.time, this.#moves);
   };
 
   #loadGame = () => {

@@ -16,7 +16,7 @@ export const createGameMatrix = (size) => {
 };
 
 export const shuffleGameMatrix = (array) => {
-  const copyArr = structuredClone(array);
+  const copyArr = JSON.parse(JSON.stringify(array));
 
   for (let i = 0; i < array.length ** 3; i++) {
     randomMove(copyArr);
@@ -29,9 +29,7 @@ export const canIMoveTile = (pos1, pos2) => {
   const diffX = Math.abs(pos1.x - pos2.x);
   const diffY = Math.abs(pos1.y - pos2.y);
 
-  return (
-    (diffX === 1 || diffY === 1) && (pos1.x === pos2.x || pos1.y === pos2.y)
-  );
+  return (diffX === 1 || diffY === 1) && (pos1.x === pos2.x || pos1.y === pos2.y);
 };
 
 export const findEmptyCell = (array) => {
@@ -92,18 +90,11 @@ export const saveDataGame = (gameState, boardSize, time, moves) => {
   localStorage.setItem(SAVE_KEY, JSON.stringify(savingData));
 };
 
-export const loadDataGame = () => {
-  if (localStorage.getItem(SAVE_KEY) !== null) {
-    const dataGame = JSON.parse(localStorage.getItem(SAVE_KEY));
-    return dataGame;
-  }
+export const loadDataGame = () => JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
 
-  return null;
-};
-
-export const filterAndSortResults = (currnentBoardSize, resultsData) => {
+export const filterAndSortResults = (currentBoardSize, resultsData) => {
   const filteredData = resultsData
-    .filter((it) => Number(it.boardSize) === currnentBoardSize)
+    .filter((it) => Number(it.boardSize) === currentBoardSize)
     .sort((a, b) => {
       if (a.time === b.time) {
         return a.moves - b.moves;
@@ -115,14 +106,7 @@ export const filterAndSortResults = (currnentBoardSize, resultsData) => {
   return filteredData;
 };
 
-export const loadResults = () => {
-  if (localStorage.getItem(RESULTS_KEY) !== null) {
-    const resultsData = JSON.parse(localStorage.getItem(RESULTS_KEY));
-    return resultsData;
-  }
-
-  return [];
-};
+export const loadResults = () => JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
 
 export const saveResults = (boardSize, time, moves) => {
   let resultsData = [];
