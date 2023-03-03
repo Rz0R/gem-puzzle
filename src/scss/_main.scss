@@ -182,12 +182,8 @@ body {
     color: #131c20;
     font-weight: 700;
 
-    top: calc(
-      var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap)
-    );
-    left: calc(
-      var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap)
-    );
+    top: calc(var(--y) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
+    left: calc(var(--x) * (var(--cell-size) + var(--cell-gap)) + var(--cell-gap));
 
     transition: all 0.3s ease 0s;
 
