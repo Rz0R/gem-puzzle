@@ -2,7 +2,7 @@
   "name": "gem-puzzle",
   "version": "1.0.0",
   "private": true,
-  "description": "Songbird is a quiz app for recognizing birds by their voices.",
+  "description": "The 15-puzzle (Game of Fifteen) is a sliding puzzle that consists of a frame of numbered square tiles in random order with one tile missing. The puzzle also exists in other sizes, creating a lot of new possibilities.",
   "scripts": {
     "build": "webpack",
     "start": "webpack serve --mode development --open"
