@@ -92,9 +92,8 @@ export const saveDataGame = (gameState, boardSize, time, moves) => {
 
 export const loadDataGame = () => JSON.parse(localStorage.getItem(SAVE_KEY) || 'null');
 
-export const filterAndSortResults = (currentBoardSize, resultsData) => {
-  const filteredData = resultsData
-    .filter((it) => Number(it.boardSize) === currentBoardSize)
+export const sortBestResults = (results) => {
+  return results
     .sort((a, b) => {
       if (a.time === b.time) {
         return a.moves - b.moves;
@@ -102,20 +101,21 @@ export const filterAndSortResults = (currentBoardSize, resultsData) => {
       return a.time - b.time;
     })
     .slice(0, 10);
-
-  return filteredData;
 };
 
-export const loadResults = () => JSON.parse(localStorage.getItem(RESULTS_KEY) || '[]');
+export const getResultsByBoard = (currentBoardSize, resultsData) => {
+  return resultsData[currentBoardSize] || [];
+};
 
-export const saveResults = (boardSize, time, moves) => {
-  let resultsData = [];
-  const loadedResultsData = loadResults();
-  if (loadedResultsData.length > 0) {
-    resultsData = [...loadedResultsData];
-  }
+export const loadResults = () => JSON.parse(localStorage.getItem(RESULTS_KEY) || '{}');
 
-  resultsData.push({ boardSize, time, moves });
+export const saveResults = (board, time, moves) => {
+  let results = loadResults();
+  let boardResults = getResultsByBoard(board, results);
+  boardResults.push({ time, moves });
+  boardResults = sortBestResults(boardResults);
 
-  localStorage.setItem(RESULTS_KEY, JSON.stringify(resultsData));
+  results[board] = boardResults;
+
+  localStorage.setItem(RESULTS_KEY, JSON.stringify(results));
 };

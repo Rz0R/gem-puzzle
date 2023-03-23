@@ -14,7 +14,7 @@ import {
   loadDataGame,
   saveResults,
   loadResults,
-  filterAndSortResults,
+  getResultsByBoard,
 } from '../utils/game.js';
 import { remove, render } from '../utils/render.js';
 
@@ -206,7 +206,7 @@ class GamePresenter {
 
   #showResults = () => {
     let resultsData = loadResults();
-    resultsData = filterAndSortResults(this.#boardSizeModel.size, resultsData);
+    resultsData = getResultsByBoard(this.#boardSizeModel.size, resultsData);
     this.#popupPresenter.showResults(this.#boardSizeModel.size, resultsData);
   };
 
